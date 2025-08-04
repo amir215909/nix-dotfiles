@@ -86,8 +86,11 @@ nix = {
     packages = with pkgs; [
     #  thunderbird
     ];
+    shell = pkgs.zsh;
   };
 
+  programs.zsh.enable = true;
+  environment.shells = with pkgs; [ zsh ];
   # Install firefox.
   programs.firefox.enable = true;
   programs.hyprland = {
