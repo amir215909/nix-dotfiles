@@ -27,7 +27,7 @@ nix = {
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "amir-x"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -90,7 +90,10 @@ nix = {
 
   # Install firefox.
   programs.firefox.enable = true;
-  programs.hyprland.enable = true;
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -109,6 +112,7 @@ nix = {
 	pkgs.wireguard-tools
 	pkgs.discord
 	pkgs.vscode
+	wofi
   ];
 
   home-manager.useGlobalPkgs = true;
