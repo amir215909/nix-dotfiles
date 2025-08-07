@@ -8,7 +8,6 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      inputs.home-manager.nixosModules.home-manager
     ];
 
 nix = {
@@ -118,10 +117,10 @@ nix = {
 	wofi
   ];
 
-  home-manager.useGlobalPkgs = true;
-  home-manager.useUserPackages = true;
+  #home-manager.useGlobalPkgs = true;
+  #home-manager.useUserPackages = true;
 
-  home-manager.users.amir = import ../home-manager/home.nix;
+  #home-manager.users.amir = import ../home-manager/home.nix;
 
 
   # Some programs need SUID wrappers, can be configured further or are
