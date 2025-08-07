@@ -153,12 +153,12 @@
 
       # Key bindings
       bind = [
-        "$mainMod, Q, exec, $terminal"
-        "$mainMod, C, killactive"
+        "$mainMod, Return, exec, $terminal"
+        "$mainMod, Q, killactive"
         "$mainMod, M, exit"
         "$mainMod, E, exec, $fileManager"
         "$mainMod, V, togglefloating"
-        "$mainMod, R, exec, $menu"
+	"$mainMod, D, exec, pkill wofi || $menu"
         "$mainMod, P, pseudo"
         "$mainMod, J, togglesplit"
         
