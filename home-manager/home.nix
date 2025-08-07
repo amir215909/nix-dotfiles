@@ -1,13 +1,13 @@
 { config, pkgs, ... }:
 {
   home.stateVersion = "25.05";
-  
+
   programs.git = {
     enable = true;
     userName = "amir";
     userEmail = "ba97140@gmail.com";
   };
-  
+
   programs.zsh = {
     enable = true;
     enableAutosuggestions = true;
@@ -18,18 +18,21 @@
             plugins = [ "git" "npm" ];
     };
   };
-  
+
   home.packages = with pkgs; [
     htop
     neofetch
     starship
+    # waybar is now managed by the programs.waybar module, so it is removed from here to prevent a collision.
+    brightnessctl
+    # Add nerd-fonts for icons
+    pkgs.nerd-fonts.fira-code
   ];
-  
+
   programs.starship.enable = true;
   programs.starship.settings = {
     add_newline = false;
   };
-
 
   # Hyprland configuration converted to Nix
   wayland.windowManager.hyprland = {
@@ -38,7 +41,7 @@
       # Monitors
       monitor = [
         "DP-2, 3440x1440@144, 0x0, 1"
-        "DP-1, disable"
+	"DP-1, disable"
       ];
 
       # Programs
@@ -70,14 +73,14 @@
         rounding = 10;
         active_opacity = 1.0;
         inactive_opacity = 1.0;
-        
+
         shadow = {
           enabled = true;
           range = 4;
           render_power = 3;
           color = "rgba(1a1a1aee)";
         };
-        
+
         blur = {
           enabled = true;
           size = 3;
@@ -89,7 +92,7 @@
       # Animations
       animations = {
         enabled = true;
-        
+
         bezier = [
           "easeOutQuint,0.23,1,0.32,1"
           "easeInOutCubic,0.65,0.05,0.36,1"
@@ -97,7 +100,7 @@
           "almostLinear,0.5,0.5,0.75,1.0"
           "quick,0.15,0,0.1,1"
         ];
-        
+
         animation = [
           "global, 1, 10, default"
           "border, 1, 5.39, easeOutQuint"
@@ -140,7 +143,7 @@
         kb_layout = "us";
         follow_mouse = 1;
         sensitivity = 0;
-        
+
         touchpad = {
           natural_scroll = false;
         };
@@ -161,13 +164,13 @@
 	"$mainMod, D, exec, pkill wofi || $menu"
         "$mainMod, P, pseudo"
         "$mainMod, J, togglesplit"
-        
+
         # Move focus
         "$mainMod, left, movefocus, l"
         "$mainMod, right, movefocus, r"
         "$mainMod, up, movefocus, u"
         "$mainMod, down, movefocus, d"
-        
+
         # Switch workspaces
         "$mainMod, 1, workspace, 1"
         "$mainMod, 2, workspace, 2"
@@ -179,7 +182,7 @@
         "$mainMod, 8, workspace, 8"
         "$mainMod, 9, workspace, 9"
         "$mainMod, 0, workspace, 10"
-        
+
         # Move windows to workspaces
         "$mainMod SHIFT, 1, movetoworkspace, 1"
         "$mainMod SHIFT, 2, movetoworkspace, 2"
@@ -191,11 +194,11 @@
         "$mainMod SHIFT, 8, movetoworkspace, 8"
         "$mainMod SHIFT, 9, movetoworkspace, 9"
         "$mainMod SHIFT, 0, movetoworkspace, 10"
-        
+
         # Special workspace
         "$mainMod, S, togglespecialworkspace, magic"
         "$mainMod SHIFT, S, movetoworkspace, special:magic"
-        
+
         # Scroll through workspaces
         "$mainMod, mouse_down, workspace, e+1"
         "$mainMod, mouse_up, workspace, e-1"
@@ -236,6 +239,105 @@
         name = "epic-mouse-v1";
         sensitivity = -0.5;
       };
+
+      # Launch Waybar
+      exec-once = "waybar";
     };
   };
+
+  # Waybar configuration
+  programs.waybar = {
+    enable = true;
+    # Required to enable the hyprland module
+    package = pkgs.waybar.overrideAttrs (oldAttrs: {
+      mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+    });
+
+    # Waybar settings
+    settings = {
+      hyprland = {
+        layer = "top";
+        position = "top";
+        height = 30;
+        spacing = 5;
+        margin = "5 5 0 5";
+
+        # Set a transparent background and rounded corners for the whole bar
+        "background" = "transparent";
+        "border-radius" = 15;
+        
+        # Modules to display are now directly under this block
+        "hyprland/workspaces" = {
+          format = "{icon}";
+          format-icons = {
+            "1" = "1";
+            "2" = "2";
+            "3" = "3";
+            "4" = "4";
+            "5" = "5";
+            "6" = "6";
+            "7" = "7";
+            "8" = "8";
+            "9" = "9";
+            "10" = "10";
+            default = ""; # Default icon for other workspaces
+          };
+          on-click = "activate";
+        };
+
+        "clock" = {
+          format = "  {:%H:%M}";
+          tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+        };
+        
+        "network" = {
+          format-wifi = "  {signalStrength}%";
+          format-ethernet = "  {ifname}";
+          tooltip-format = "{ipaddr}";
+        };
+
+        "pulseaudio" = {
+          format = "  {volume}%";
+          format-muted = "  Muted";
+          on-click = "pactl set-sink-mute @DEFAULT_SINK@ toggle";
+          tooltip = false;
+        };
+
+        "battery" = {
+          format = "  {capacity}%";
+          format-charging = "充電 {capacity}%";
+          format-full = "  Full";
+          format-alt = "  {time}";
+          format-low = "  {capacity}%";
+          states = {
+            low = 15;
+          };
+        };
+
+        "modules-left" = [ "hyprland/workspaces" ];
+        "modules-center" = [ "clock" ];
+        "modules-right" = [ "battery" "pulseaudio" "network" ];
+      };
+    };
+
+    # CSS styling for the bar and modules to create the segmented look
+    style = ''
+      #waybar {
+        background-color: rgba(26, 26, 26, 0.8);
+        border-radius: 15px;
+        color: white;
+        font-family: sans-serif;
+        font-size: 14px;
+      }
+      
+      /* Style for individual segments */
+      #workspaces, #clock, #battery, #pulseaudio, #network {
+        padding: 0 10px;
+        background-color: rgba(59, 59, 59, 0.5);
+        border-radius: 10px;
+        margin: 5px;
+      }
+    '';
+  };
 }
+
