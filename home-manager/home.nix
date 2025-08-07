@@ -268,9 +268,9 @@
       {
         layer = "top";
         position = "top";
-        height = 30;
-        spacing = 5;
-        margin = "0 5 0 5";
+        height = 15;
+        spacing = 0;
+        margin = "0 0 0 0";
 
         modules-left = [ "hyprland/workspaces" ];
         modules-center = [ "clock" ];
@@ -291,7 +291,6 @@
             "10" = "10";
             default = "";
           };
-          all-workspaces = true;
           on-click = "activate";
         };
 
@@ -330,7 +329,7 @@
     style = ''
       #waybar {
         background-color: rgba(26, 26, 26, 0.8);
-        border-radius: 15px;
+        border-radius: 0;
         color: white;
         font-family: sans-serif;
         font-size: 14px;
@@ -338,7 +337,7 @@
       
       /* Style for individual segments */
       #workspaces, #clock, #battery, #pulseaudio, #network {
-        padding: 0 10px;
+        padding: 0 5px;
         background-color: rgba(59, 59, 59, 0.5);
         border-radius: 10px;
         margin: 5px;
