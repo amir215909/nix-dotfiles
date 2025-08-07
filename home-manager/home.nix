@@ -29,6 +29,15 @@
     pkgs.nerd-fonts.fira-code
   ];
 
+  home.sessionVariables = {
+    XDG_CURRENT_DESKTOP = "Hyprland";
+    XDG_SESSION_TYPE = "wayland";
+    XDG_SESSION_DESKTOP = "Hyprland";
+    QT_QPA_PLATFORM = "wayland";
+    SDL_VIDEODRIVER = "wayland";
+    CLUTTER_BACKEND = "wayland";
+  };
+
   programs.starship.enable = true;
   programs.starship.settings = {
     add_newline = false;
@@ -41,7 +50,7 @@
       # Monitors
       monitor = [
         "DP-2, 3440x1440@144, 0x0, 1"
-	"DP-1, disable"
+        "DP-1, disable"
       ];
 
       # Programs
@@ -248,25 +257,25 @@
   # Waybar configuration
   programs.waybar = {
     enable = true;
+
     # Required to enable the hyprland module
     package = pkgs.waybar.overrideAttrs (oldAttrs: {
       mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
     });
 
-    # Waybar settings
-    settings = {
-      hyprland = {
+    # Waybar settings, which will be converted to JSON
+    settings = [
+      {
         layer = "top";
         position = "top";
         height = 30;
         spacing = 5;
-        margin = "5 5 0 5";
+        margin = "0 5 0 5";
 
-        # Set a transparent background and rounded corners for the whole bar
-        "background" = "transparent";
-        "border-radius" = 15;
-        
-        # Modules to display are now directly under this block
+        modules-left = [ "hyprland/workspaces" ];
+        modules-center = [ "clock" ];
+        modules-right = [ "battery" "pulseaudio" "network" ];
+
         "hyprland/workspaces" = {
           format = "{icon}";
           format-icons = {
@@ -280,30 +289,31 @@
             "8" = "8";
             "9" = "9";
             "10" = "10";
-            default = ""; # Default icon for other workspaces
+            default = "";
           };
+          all-workspaces = true;
           on-click = "activate";
         };
 
-        "clock" = {
+        clock = {
           format = "  {:%H:%M}";
           tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
         };
-        
-        "network" = {
+
+        network = {
           format-wifi = "  {signalStrength}%";
           format-ethernet = "  {ifname}";
           tooltip-format = "{ipaddr}";
         };
 
-        "pulseaudio" = {
+        pulseaudio = {
           format = "  {volume}%";
           format-muted = "  Muted";
           on-click = "pactl set-sink-mute @DEFAULT_SINK@ toggle";
           tooltip = false;
         };
 
-        "battery" = {
+        battery = {
           format = "  {capacity}%";
           format-charging = "充電 {capacity}%";
           format-full = "  Full";
@@ -313,30 +323,39 @@
             low = 15;
           };
         };
-
-        "modules-left" = [ "hyprland/workspaces" ];
-        "modules-center" = [ "clock" ];
-        "modules-right" = [ "battery" "pulseaudio" "network" ];
-      };
-    };
+      }
+    ];
 
     # CSS styling for the bar and modules to create the segmented look
     style = ''
-      #waybar {
-        background-color: rgba(26, 26, 26, 0.8);
-        border-radius: 15px;
-        color: white;
-        font-family: sans-serif;
-        font-size: 14px;
-      }
-      
-      /* Style for individual segments */
-      #workspaces, #clock, #battery, #pulseaudio, #network {
-        padding: 0 10px;
-        background-color: rgba(59, 59, 59, 0.5);
-        border-radius: 10px;
-        margin: 5px;
-      }
+#waybar {
+  background-color: rgba(26, 26, 26, 0.8);  /* dark semi-transparent */
+  color: white;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+
+/* Workspaces: all buttons */
+#workspaces button {
+  color: rgb(204, 204, 204);                     /* light gray text for visibility */
+  background-color: transparent;                 /* transparent background */
+  padding: 0 8px;
+  margin: 2px;
+  border: none;
+}
+
+/* Hover effect on workspace buttons */
+#workspaces button:hover {
+  background-color: rgba(255, 255, 255, 0.1);     /* light hover */
+}
+
+/* Active workspace button */
+#workspaces button.active {
+  background-color: rgb(51, 204, 255);           /* #33ccff */
+  color: rgb(0, 0, 0);                           /* black text for contrast */
+  border-radius: 8px;
+}
+
     '';
   };
 }

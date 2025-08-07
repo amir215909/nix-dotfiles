@@ -115,7 +115,16 @@ nix = {
     pkgs.discord
     pkgs.vscode
     wofi
+    xdg-desktop-portal
+    xdg-desktop-portal-wlr
   ];
+
+  services.dbus.enable = true;
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true; # Use the wlr backend for Wayland compositors
+    extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
