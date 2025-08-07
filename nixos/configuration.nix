@@ -107,14 +107,14 @@ nix = {
   environment.systemPackages = with pkgs; [
   	vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   	wget
-	alacritty
-	pkgs.kitty
-	pkgs.neovim
-	pkgs.google-chrome
-	pkgs.wireguard-tools
-	pkgs.discord
-	pkgs.vscode
-	wofi
+    alacritty
+    pkgs.kitty
+    pkgs.neovim
+    pkgs.google-chrome
+    pkgs.wireguard-tools
+    pkgs.discord
+    pkgs.vscode
+    wofi
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
