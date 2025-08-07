@@ -328,34 +328,27 @@
 
     # CSS styling for the bar and modules to create the segmented look
     style = ''
-#waybar {
-  background-color: rgba(26, 26, 26, 0.8);  /* dark semi-transparent */
-  color: white;
-  font-family: sans-serif;
-  font-size: 14px;
-}
+      #waybar {
+        background-color: rgba(26, 26, 26, 0.8);
+        border-radius: 15px;
+        color: white;
+        font-family: sans-serif;
+        font-size: 14px;
+      }
+      
+      /* Style for individual segments */
+      #workspaces, #clock, #battery, #pulseaudio, #network {
+        padding: 0 10px;
+        background-color: rgba(59, 59, 59, 0.5);
+        border-radius: 10px;
+        margin: 5px;
+      }
 
-/* Workspaces: all buttons */
-#workspaces button {
-  color: rgb(204, 204, 204);                     /* light gray text for visibility */
-  background-color: transparent;                 /* transparent background */
-  padding: 0 8px;
-  margin: 2px;
-  border: none;
-}
-
-/* Hover effect on workspace buttons */
-#workspaces button:hover {
-  background-color: rgba(255, 255, 255, 0.1);     /* light hover */
-}
-
-/* Active workspace button */
-#workspaces button.active {
-  background-color: rgb(51, 204, 255);           /* #33ccff */
-  color: rgb(0, 0, 0);                           /* black text for contrast */
-  border-radius: 8px;
-}
-
+      /* Highlight the active workspace */
+      #workspaces button.active {
+        background-color: rgb(51, 204, 255);
+        opacity: 0.93;
+      }
     '';
   };
 }
