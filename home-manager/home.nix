@@ -259,6 +259,8 @@ in
         "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
         "workspace 8, class:^(discord)$"
         "workspace 8, class:^(org.telegram.desktop)$"
+        "workspace 1, class:^(google-chrome)$"
+        "workspace 1, class:^(firefox)$"
       ];
 
       # Device-specific config
