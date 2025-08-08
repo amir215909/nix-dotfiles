@@ -23,10 +23,11 @@
     htop
     neofetch
     starship
-    # waybar is now managed by the programs.waybar module, so it is removed from here to prevent a collision.
     brightnessctl
-    # Add nerd-fonts for icons
-    pkgs.nerd-fonts.fira-code
+    nerd-fonts.fira-code
+    swaylock-effects
+    swaybg
+    playerctl
   ];
 
   home.sessionVariables = {
@@ -170,9 +171,10 @@
         "$mainMod, M, exit"
         "$mainMod, E, exec, $fileManager"
         "$mainMod, V, togglefloating"
-	"$mainMod, D, exec, pkill wofi || $menu"
+	      "$mainMod, D, exec, pkill wofi || $menu"
         "$mainMod, P, pseudo"
         "$mainMod, J, togglesplit"
+	      "$mainMod, L, exec, $lock"
 
         # Move focus
         "$mainMod, left, movefocus, l"
@@ -252,6 +254,24 @@
       # Launch Waybar
       exec-once = "waybar";
     };
+
+      extraConfig = ''
+        # Lock screen
+        # Use a variable to define the wallpaper path for convenience
+        # Make sure to replace "~/Pictures/wallpaper.jpg" with your actual path
+        $lockWallpaper = ~/.config/hypr/wallpaper.jpg
+
+        # Lock with a static wallpaper and consistent styling
+        bind = $mainMod, L, exec, swaylock -c 000000 --image $lockWallpaper \
+          --indicator --indicator-caps-lock \
+          --ring-color 33ccffee --key-hl-color 00ff99ee \
+          --ring-ver-color 00ff99ee --ring-wrong-color ff0000ee \
+          --line-color 00000000 --inside-color 00000000 \
+          --text-color ffffffff --font "Fira Code Nerd Font" --font-size 20
+
+        # Set a wallpaper on startup
+        exec-once = swaybg -i $lockWallpaper
+      '';
   };
 
   # Waybar configuration
