@@ -28,6 +28,7 @@
     swaylock-effects
     swaybg
     playerctl
+    postman
   ];
 
   home.sessionVariables = {
