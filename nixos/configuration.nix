@@ -128,6 +128,7 @@ powerManagement.enable = true;
     wofi
     xdg-desktop-portal
     xdg-desktop-portal-wlr
+    jdk24
   ];
 
   services.dbus.enable = true;
