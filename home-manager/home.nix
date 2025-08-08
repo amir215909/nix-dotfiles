@@ -1,4 +1,15 @@
 { config, pkgs, ... }:
+
+let
+  # Define colors from your Hyprland theme for reuse
+  activeBorderColor = "rgba(33ccffee)";
+  inactiveBorderColor = "rgba(595959aa)";
+  backgroundColor = "rgba(26, 26, 26, 0.8)";
+  inputBgColor = "rgba(59, 59, 59, 0.5)";
+  textColor = "white";
+  highlightColor = "rgba(59, 59, 59, 0.7)";
+  mainColor = "rgba(00ff99ee)";
+in
 {
   home.stateVersion = "25.05";
 
@@ -15,7 +26,7 @@
     oh-my-zsh = {
       enable = true;
       theme = "robbyrussell";
-            plugins = [ "git" "npm" ];
+      plugins = [ "git" "npm" ];
     };
   };
 
@@ -29,6 +40,7 @@
     swaybg
     playerctl
     postman
+    wofi
   ];
 
   home.sessionVariables = {
@@ -72,8 +84,8 @@
         gaps_in = 5;
         gaps_out = 20;
         border_size = 2;
-        "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-        "col.inactive_border" = "rgba(595959aa)";
+        "col.active_border" = "${activeBorderColor} ${mainColor} 45deg";
+        "col.inactive_border" = inactiveBorderColor;
         resize_on_border = false;
         allow_tearing = false;
         layout = "dwindle";
@@ -172,10 +184,10 @@
         "$mainMod, M, exit"
         "$mainMod, E, exec, $fileManager"
         "$mainMod, V, togglefloating"
-	      "$mainMod, D, exec, pkill wofi || $menu"
+        "$mainMod, D, exec, pkill wofi || $menu"
         "$mainMod, P, pseudo"
         "$mainMod, J, togglesplit"
-	      "$mainMod, L, exec, $lock"
+        "$mainMod, L, exec, $lock"
 
         # Move focus
         "$mainMod, left, movefocus, l"
@@ -256,23 +268,21 @@
       exec-once = "waybar";
     };
 
-      extraConfig = ''
-        # Lock screen
-        # Use a variable to define the wallpaper path for convenience
-        # Make sure to replace "~/Pictures/wallpaper.jpg" with your actual path
-        $lockWallpaper = ~/.config/hypr/wallpaper.jpg
+    extraConfig = ''
+      # Lock screen
+      # Use a variable to define the wallpaper path for convenience
+      # Make sure to replace "~/Pictures/wallpaper.jpg" with your actual path
+      $lockWallpaper = ~/.config/hypr/wallpaper.jpg
+      bind = $mainMod, L, exec, swaylock -c 000000 --image $lockWallpaper \
+        --indicator --indicator-caps-lock \
+        --ring-color 33ccffee --key-hl-color 00ff99ee \
+        --ring-ver-color 00ff99ee --ring-wrong-color ff0000ee \
+        --line-color 00000000 --inside-color 00000000 \
+        --text-color ffffffff --font "Fira Code Nerd Font" --font-size 20
 
-        # Lock with a static wallpaper and consistent styling
-        bind = $mainMod, L, exec, swaylock -c 000000 --image $lockWallpaper \
-          --indicator --indicator-caps-lock \
-          --ring-color 33ccffee --key-hl-color 00ff99ee \
-          --ring-ver-color 00ff99ee --ring-wrong-color ff0000ee \
-          --line-color 00000000 --inside-color 00000000 \
-          --text-color ffffffff --font "Fira Code Nerd Font" --font-size 20
-
-        # Set a wallpaper on startup
-        exec-once = swaybg -i $lockWallpaper
-      '';
+      # Set a wallpaper on startup
+      exec-once = swaybg -i $lockWallpaper
+    '';
   };
 
   # Waybar configuration
@@ -349,9 +359,9 @@
     # CSS styling for the bar and modules to create the segmented look
     style = ''
       #waybar {
-        background-color: rgba(26, 26, 26, 0.8);
+        background-color: ${backgroundColor};
         border-radius: 0;
-        color: white;
+        color: ${textColor};
         font-family: sans-serif;
         font-size: 14px;
       }
@@ -359,7 +369,7 @@
       /* Style for individual segments */
       #workspaces, #clock, #battery, #pulseaudio, #network {
         padding: 0 5px;
-        background-color: rgba(59, 59, 59, 0.5);
+        background-color: ${inputBgColor};
         border-radius: 10px;
         margin: 5px;
       }
@@ -371,5 +381,59 @@
       }
     '';
   };
-}
 
+  # Wofi configuration
+  programs.wofi = {
+    enable = true;
+    settings = {
+      allow_images = true;
+      show = "drun"; # 'drun' mode is for application launchers
+    };
+    style = ''
+      window {
+        background-color: ${backgroundColor};
+        border: 2px solid ${mainColor};
+        border-radius: 10px;
+        font-family: "Fira Code Nerd Font";
+        color: ${textColor};
+        font-size: 14px;
+      }
+      
+      #outer-box {
+        margin: 5px;
+      }
+      
+      #input {
+        background-color: ${inputBgColor};
+        color: ${textColor};
+        padding: 5px;
+        border-radius: 8px;
+        margin: 5px;
+        border: none;
+      }
+      
+      #inner-box {
+        margin: 5px;
+      }
+      
+      #entry {
+        padding: 5px;
+        margin: 2px;
+      }
+
+      #entry:selected {
+        background-color: ${highlightColor};
+        border-left: 2px solid ${mainColor};
+        border-radius: 8px;
+      }
+
+      #text {
+        color: ${textColor};
+      }
+
+      #img {
+        margin-right: 10px;
+      }
+    '';
+  };
+}
