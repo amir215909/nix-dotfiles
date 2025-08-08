@@ -41,6 +41,7 @@ in
     playerctl
     postman
     wofi
+    telegram-desktop
   ];
 
   home.sessionVariables = {
@@ -256,6 +257,7 @@ in
       windowrule = [
         "suppressevent maximize, class:.*"
         "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
+        "workspace 8, class:^(discord)$"
       ];
 
       # Device-specific config
