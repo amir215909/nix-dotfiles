@@ -40,6 +40,16 @@ nix = {
   time.timeZone = "Asia/Tehran";
   time.hardwareClockInLocalTime = true;
 
+systemd.sleep.extraConfig = ''
+  AllowSuspend=no
+  AllowHibernation=no
+  AllowHybridSleep=no
+  AllowSuspendThenHibernate=no
+'';
+
+# It's also good practice to ensure power management is enabled in general.
+powerManagement.enable = true;
+
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
